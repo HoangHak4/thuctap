@@ -5,13 +5,28 @@ Ngày Hôm nay em đọc phần : Xây dựng module
  + Cấu trúc: 
  Thư mục
 data/: Chứa dữ liệu mẫu và dữ liệu XML.
+
+
 models/: Định nghĩa các mô hình (model).
+
+
 controllers/: Chứa các bộ điều khiển (HTTP routes).
+
+
 views/: Chứa các chế độ xem và mẫu (templates).
+
+
 static/: Chứa các tài sản web, được chia thành các thư mục như css/, js/, img/, lib/.
+
+
 wizard/: Nhóm các mô hình tạm thời và chế độ xem của chúng.
+
+
 report/: Chứa báo cáo và mô hình có thể in.
+ 
+ 
 tests/: Chứa các bài kiểm tra Python.
+
 
 Đặt tên Tập tin
 Tên tệp nên phản ánh mô hình chính, với các tệp mô hình được phân loại rõ ràng.
