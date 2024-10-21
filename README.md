@@ -289,3 +289,170 @@ Các trường có thể được đọc và ghi trực tiếp như thuộc tín
 
 Sử dụng Mapped cho nhiều bản ghi:
 Đối với các trường không liên kết trên nhiều bản ghi, sử dụng phương thức mapped()
+
+
+
+
+ngày 3 21/10
+
+ 1 Actions
+
+Attributes bắt buộc:
+
+type: Phân loại hành động, xác định cách hành động được xử lý.
+
+
+name: Mô tả ngắn gọn về hành động, có thể hiển thị trên giao diện người dùng.
+
+
+Các dạng trả về:
+
+False: Đóng bất kỳ hộp thoại hành động nào đang mở.
+
+String: Xử lý như nhãn của hành động.
+
+Number: Đọc bản ghi hành động từ cơ sở dữ liệu.
+
+Dictionary: Thực hiện hành động như mô tả.
+
+Attributes tùy chọn:
+
+binding_model_id: Xác định mô hình mà hành động liên kết.
+
+binding_type: Xác định loại menu ngữ cảnh mà hành động sẽ xuất hiện.
+
+2 Window Actions (ir.actions.act_window)
+
+Mô tả: Sử dụng để hiển thị các mô hình qua các view.
+
+Fields chính:
+
+res_model: Mô hình cần hiển thị.
+
+views: Danh sách các cặp (view_id, view_type).
+
+res_id: Bản ghi cụ thể (tùy chọn).
+
+domain: Bộ lọc mặc định cho các truy vấn tìm kiếm.
+
+3 URL Actions (ir.actions.act_url)
+
+Mô tả: Mở một URL (trang web).
+
+Fields chính:
+
+url: Địa chỉ cần mở.
+
+target: Xác định cách mở URL (mới hay tự thay thế).
+
+4 Server Actions (ir.actions.server)
+
+Mô tả: Hành động có thể thực thi mã Python hoặc các hành động khác.
+
+Fields chính:
+
+id: Định danh của hành động trong cơ sở dữ liệu.
+
+context: Dữ liệu ngữ cảnh khi thực hiện hành động.
+
+5 Report Actions (ir.actions.report)
+
+Mô tả: Kích hoạt việc in một báo cáo.
+
+Fields chính:
+
+name: Tên báo cáo.
+
+model: Mô hình của báo cáo.
+
+report_type: Loại báo cáo (PDF hoặc HTML).
+
+6 Client Actions (ir.actions.client)
+
+Mô tả: Kích hoạt hành động thực hiện hoàn toàn trong client.
+
+Fields chính:
+
+tag: Nhận diện hành động phía client.
+
+params: Dữ liệu bổ sung gửi tới client.
+
+7 Automated Actions (ir.cron)
+
+Mô tả: Hành động tự động được kích hoạt theo tần suất đã định.
+
+Fields chính:
+
+name: Tên hành động tự động.
+
+interval_number: Số đơn vị thời gian giữa hai lần thực hiện.
+
+code: Nội dung mã của hành động.
+
+
+
+Quyền Truy Cập (Access Rights)
+
+Chức năng: Cấp quyền truy cập cho toàn bộ mô hình với một tập hợp các thao tác.
+
+Nguyên tắc: Nếu không có quyền truy cập phù hợp cho một thao tác trên mô hình của người dùng (thông qua nhóm của họ), người dùng sẽ không có quyền truy cập.
+
+Quy tắc: Quyền truy cập là cộng dồn. Quyền truy cập của một người dùng là sự hợp nhất của các quyền mà họ nhận được từ tất cả các nhóm.
+
+Ví dụ: Người dùng thuộc nhóm A (cấp quyền đọc và tạo) và nhóm B (cấp quyền cập nhật) sẽ có quyền tạo, đọc và cập nhật.
+Class ir.model.access:
+
+name: Mục đích hoặc vai trò của nhóm.
+
+model_id: Mô hình mà quyền truy cập ACL kiểm soát.
+
+group_id: Nhóm (res.groups) mà quyền truy cập được cấp; nếu group_id trống, quyền ACL sẽ được cấp cho mọi người dùng.
+
+perm_method: Các thuộc tính cho phép quyền CRUD tương ứng khi được thiết lập, mặc định không được thiết lập.
+
+perm_create: Quyền tạo.
+
+perm_read: Quyền đọc.
+
+perm_write: Quyền cập nhật.
+
+perm_unlink: Quyền xóa.
+
+2 Quy Tắc Bản Ghi (Record Rules)
+
+Chức năng: Là các điều kiện cần được thỏa mãn để cho phép một thao tác.
+
+Nguyên tắc: Quy tắc bản ghi được đánh giá từng bản ghi một, theo quyền truy cập.
+
+Mặc định cho phép: Nếu quyền truy cập cấp quyền và không có quy tắc nào áp dụng cho thao tác và mô hình của người dùng, quyền truy cập sẽ được cấp.
+Class ir.rule:
+
+name: Mô tả quy tắc.
+
+model_id: Mô hình mà quy tắc áp dụng.
+
+groups: Nhóm (res.groups) mà quyền truy cập được cấp (nhiều nhóm có thể được chỉ định). Nếu không chỉ định nhóm, quy tắc sẽ là toàn cầu.
+global: Xác định tình trạng toàn cầu (hay không) của quy tắc.
+
+domain_force: Một điều kiện được chỉ định dưới dạng miền; quy tắc cho phép các thao tác được chọn nếu miền khớp với bản ghi và ngược lại.
+Các biến có sẵn trong miền:
+
+
+
+time: Mô-đun thời gian của Python.
+
+user: Người dùng hiện tại, dưới dạng một recordset đơn lẻ.
+
+company_id: ID công ty hiện tại của người dùng.
+
+company_ids: Tất cả các công ty mà người dùng hiện tại có quyền truy cập, dưới dạng danh sách các ID công ty.
+
+Các thuộc tính perm_method: Khác với ir.model.access, cho phép xác định thao tác mà quy tắc áp dụng. Nếu thao tác không được chọn, quy tắc sẽ không được kiểm tra.
+
+perm_create: Quyền tạo.
+
+perm_read: Quyền đọc.
+
+perm_write: Quyền cập nhật.
+
+perm_unlink: Quyền xóa.
