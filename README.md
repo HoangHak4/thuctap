@@ -456,3 +456,81 @@ perm_read: Quyền đọc.
 perm_write: Quyền cập nhật.
 
 perm_unlink: Quyền xóa.
+
+
+
+
+
+ngày 4: 24/10
+
+Controllers
+
+Khái niệm: Controllers trong Odoo cung cấp cơ chế mở rộng riêng, khác với các model, để xử lý các yêu cầu HTTP. Điều này là cần thiết vì một số tiền đề (như cơ sở dữ liệu) có thể chưa sẵn có.
+
+Tạo Controller: Các controller được tạo ra bằng cách kế thừa từ lớp Controller. Các route được định nghĩa thông qua các phương thức được trang trí bằng @route():
+
+
+Ghi đè Controller: Để ghi đè một controller, bạn kế thừa từ lớp của nó và ghi đè các phương thức liên quan. Việc trang trí bằng @route() là cần thiết để giữ cho phương thức (và route) vẫn hiển thị:
+
+Thay đổi quyền truy cập: Bạn có thể thay đổi quyền truy cập bằng cách cung cấp các tham số khác nhau cho decorator @route(), ví dụ:
+
+Routing: Sử dụng @odoo.http.route() để định tuyến các yêu cầu HTTP đến các phương thức được trang trí.
+
+Tham số:
+
+route: Đường dẫn mà phương thức phục vụ.
+
+type: Loại yêu cầu (json hoặc http).
+
+auth: Phương thức xác thực (user, public, none).
+
+methods: Danh sách các phương thức HTTP (verb) mà route này áp dụng.
+
+cors: Giá trị của chỉ thị Access-Control-Allow-Origin.
+
+csrf: Bật hoặc tắt bảo vệ CSRF cho route.
+
+Request: Đối tượng yêu cầu được tự động thiết lập tại odoo.http.request vào đầu mỗi yêu cầu. Nó cung cấp nhiều phương thức tiện ích như update_env(), csrf_token(), và get_http_params() để làm việc với các thông tin yêu cầu.
+
+Response:
+
+make_response() và make_json_response() giúp tạo các phản hồi không phải HTML hoặc phản hồi JSON.
+not_found() trả về phản hồi HTTP 404.
+render() cho phép tạo các mẫu QWeb.
+
+QWeb là công cụ tạo mẫu chính được sử dụng bởi Odoo. Đây là một công cụ tạo mẫu dựa trên XML, chủ yếu được sử dụng để tạo các đoạn và trang HTML.
+
+Các chỉ thị đặc biệt
+t-field: Dùng khi thực hiện truy cập trường trên bản ghi "thông minh".
+t-debug: Kích hoạt một trình gỡ lỗi.
+t-cache: Lưu trữ các phần của mẫu để giảm thiểu thời gian render.
+
+
+
+Xuất khẩu các thuật ngữ có thể dịch
+Xuất khẩu thuật ngữ:
+
+Truy cập vào giao diện quản trị và chọn Cài đặt ‣ Dịch thuật ‣ Nhập/Xuất ‣ Xuất Dịch thuật.
+Giữ ngôn ngữ mặc định (mẫu trống).
+Chọn định dạng PO File và module của bạn.
+Nhấn Xuất và tải xuống tệp.
+Di chuyển tệp .pot vào thư mục yourmodule/i18n/.
+Tạo tệp dịch:
+
+Tệp .pot là mẫu chứa các chuỗi có thể dịch. Bạn có thể tạo tệp PO từ mẫu này bằng công cụ như POEdit hoặc sao chép và đổi tên thành language.po.
+Xuất khẩu ngầm và rõ ràng
+Xuất khẩu ngầm: Odoo tự động xuất các chuỗi từ nội dung kiểu "data" như:
+
+Các nút văn bản trong các chế độ xem không phải QWeb.
+Các mẫu QWeb (trừ các khối được đánh dấu bằng t-translation="off").
+Xuất khẩu rõ ràng: Nếu cần xuất khẩu các thuật ngữ trong mã Python hoặc JavaScript, hãy bao quanh chuỗi bằng các hàm:
+
+Biến: Tránh việc sử dụng biến trong các chuỗi có thể dịch. Sử dụng tham số:
+
+
+Khối: Không chia nhỏ chuỗi thành nhiều khối. Giữ nguyên câu đầy đủ trong một khối để dịch dễ dàng:
+
+Quy tắc số nhiều và thời gian chạy
+Số nhiều: Đừng áp dụng quy tắc số nhiều theo cách tiếng Anh. Sử dụng cấu trúc phù hợp cho từng ngôn ngữ:
+
+Thời gian chạy: Không nên gọi hàm dịch ngay tại thời điểm khởi động server hoặc khi tệp JavaScript được đọc. Sử dụng phương pháp dịch lười (lazy):
