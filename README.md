@@ -534,3 +534,112 @@ Quy tắc số nhiều và thời gian chạy
 Số nhiều: Đừng áp dụng quy tắc số nhiều theo cách tiếng Anh. Sử dụng cấu trúc phù hợp cho từng ngôn ngữ:
 
 Thời gian chạy: Không nên gọi hàm dịch ngay tại thời điểm khởi động server hoặc khi tệp JavaScript được đọc. Sử dụng phương pháp dịch lười (lazy):
+
+
+
+
+
+Ngày 5 :
+
+Tổng quan về Khung JavaScript trong Odoo
+Khung JavaScript của Odoo được thiết kế để hoạt động với ba trường hợp sử dụng chính:
+
+Web Client: Ứng dụng web riêng biệt cho phép người dùng xem và chỉnh sửa dữ liệu kinh doanh. Đây là ứng dụng trang đơn (SPA), nơi dữ liệu mới được tải từ máy chủ khi cần mà không cần tải lại toàn bộ trang.
+
+Trang Web: Phần công khai của Odoo, cho phép người dùng không xác định duyệt nội dung, mua sắm hoặc thực hiện nhiều hành động với tư cách là khách hàng. Đây là một trang web cổ điển với nhiều tuyến đường và các điều khiển tương tác.
+
+Điểm Bán Hàng: Giao diện cho điểm bán hàng, cũng là một ứng dụng trang đơn chuyên biệt.
+
+Khách Hàng Web
+WebClient: Đây là thành phần gốc của toàn bộ giao diện người dùng. Nó sắp xếp tất cả các thành phần phụ và cung cấp các dịch vụ như RPC (Remote Procedure Calls) và lưu trữ cục bộ.
+
+Trong thời gian chạy, web client hoạt động như một ứng dụng trang đơn, yêu cầu dữ liệu cần thiết mà không cần tải lại trang đầy đủ, và quản lý URL đồng bộ với trạng thái của ứng dụng.
+
+Tổng Quan về Mã JS của Máy Khách Web
+Mã máy khách web được tìm thấy trong thư mục web/static/src/js với các tệp quan trọng như:
+
+boot.js: Định nghĩa hệ thống module, cần được tải trước.
+
+core/: Chứa các khối xây dựng cấp thấp, bao gồm hệ thống lớp và tiện ích.
+
+chrome/: Chứa các tiện ích lớn tạo nên phần lớn giao diện người dùng.
+
+Quản Lý Tài Sản
+Quản lý tài sản trong Odoo bao gồm việc định nghĩa một tập hợp các bundle trong XML, với mỗi bundle là một tập hợp các tệp JavaScript, CSS, và SCSS.
+
+Các tài sản được định nghĩa trong addons/web/views/webclient_templates.xml và có thể được chèn vào mẫu thông qua các chỉ thị như t-call-assets.
+
+Gói Chính
+Odoo kiểm tra dấu thời gian của các tệp trong mỗi gói khi khởi động, tạo hoặc tái tạo các gói khi cần thiết. Một số gói quan trọng bao gồm:
+
+web.assets_common: Chứa hầu hết các tài sản chung cho máy khách web, trang web, và điểm bán hàng.
+
+web.assets_backend: Dành riêng cho máy khách web và trình quản lý hành động.
+
+web.assets_frontend: Bao gồm tài sản dành riêng cho trang web công cộng như thương mại điện tử và diễn đàn.
+
+Thêm Tệp vào Gói Tài Sản
+Để thêm một tệp vào một bundle, cần thực hiện các bước sau:
+
+Thêm tệp asset.xml vào thư mục views/.
+Thêm chuỗi 'views/assets.xml' vào khóa data trong tệp manifest.
+Tạo chế độ xem kế thừa của gói mong muốn và thêm tệp bằng biểu thức XPath.
+Xử Lý Vấn Đề Tệp Không Tải/Cập Nhật
+Nếu tệp không được tải đúng cách, có thể thử các giải pháp sau:
+
+Khởi động lại máy chủ để tạo lại tài sản.
+Kiểm tra bảng điều khiển để tìm lỗi.
+Sử dụng chế độ debug để ép máy chủ cập nhật các tệp tài sản.
+Khởi động máy chủ với tùy chọn --dev=all để tự động vô hiệu hóa tài sản khi cần thiết.
+Hệ Thống Mô-đun JavaScript
+Hệ thống mô-đun trong Odoo đảm bảo các tệp JavaScript được tải theo đúng thứ tự. Mô-đun được định nghĩa bằng cách sử dụng hàm odoo.define, có thể khai báo các phụ thuộc rõ ràng.
+
+Định Nghĩa Một Mô-đun
+Mô-đun được định nghĩa với ba đối số: tên mô-đun, danh sách phụ thuộc, và hàm xử lý. Nếu phụ thuộc chưa sẵn sàng, mô-đun sẽ không được tải.
+
+Mixin trong Odoo
+
+Hỗn hợp (Mixin) cho phép chia sẻ hành vi giữa các lớp mà không cần đa kế thừa.
+
+Ví dụ về việc sử dụng mixin để thêm phương thức dance vào lớp Hamster.
+
+Vá lớp hiện có
+
+Phương thức include cho phép sửa đổi lớp đã tồn tại, ảnh hưởng đến tất cả các trường hợp của lớp đó.
+
+Cần thực hiện cẩn thận vì điều này có thể thay đổi hành vi của lớp trong toàn bộ ứng dụng.
+
+Tiện ích (Widgets)
+
+Lớp Widget là một phần quan trọng trong giao diện người dùng Odoo, cho phép tạo ra các thành phần UI với nhiều tính năng.
+
+Tiện ích hỗ trợ việc quản lý vòng đời (init, willStart, render, start, destroy).
+
+Ví dụ về một tiện ích đếm:
+
+Cung cấp một ví dụ đơn giản về cách tạo một tiện ích đếm với các sự kiện và mẫu QWeb.
+
+Vòng đời của Widget
+
+Các phương thức trong vòng đời của Widget:
+
+init: Khởi tạo trạng thái.
+
+willStart: Thực hiện công việc không đồng bộ.
+
+start: Thực hiện công việc sau khi render.
+
+destroy: Dọn dẹp và xóa widget khỏi DOM.
+
+API tiện ích
+
+Cung cấp nhiều thuộc tính và phương thức để tương tác với DOM, xử lý sự kiện, và quản lý các mẫu QWeb.
+
+Một số phương thức API quan trọng:
+
+appendTo(), prependTo(), insertAfter(), và insertBefore(): Dùng để chèn widget vào DOM.
+
+setElement(): Đặt lại gốc DOM của widget.
+
+
+
